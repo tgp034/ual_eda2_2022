@@ -24,12 +24,18 @@ public class NBA {
 		// Lectura del fichero
 		String linea;
 		linea = br.readLine();
+		
+		//Jugador auxiliar
 		Jugador aux = new Jugador("", "", "", 0, 0);
-		// Año(1), nombre(2), posicion(4), equipo(6), porcentaje(7), puntuacion(8)
-
+		
+		//Vamos leyendo las lineas del archivo
 		while ((linea = br.readLine()) != null) {
+			
+			//Separamos con un split cada linea, para posteriormente hacer un switch que
+			// introduzca al jugador auxiliar los valores relevantes:
+			//nombre(2), posicion(4), equipo(6), porcentaje(7), puntuacion(8)
 			String[] separado = linea.split(";");
-
+			
 			for (int i = 0; i <= separado.length; i++) {
 				switch (i) {
 
@@ -61,25 +67,36 @@ public class NBA {
 
 				}
 			}
-			
+			//Creamos el jugador nuevo (candidato a entrar al arraylist o modificar la ultima posicion) usando el auxiliar
 			Jugador nuevo = new Jugador(aux.getNombre(), aux.getPosiciones().get(0), aux.getEquipos().get(0),
 					aux.getAciertos(), aux.getPuntos());
-			if (nba.isEmpty())
+			
+			//Si el arraylist esta vacio metemos el nuevo
+			if (nba.isEmpty()) {
+				nuevo.setMedia();
 				nba.add(nuevo);
-
-			else if (nuevo.getNombre().equals(nba.get(nba.size() - 1).getNombre())) { // Compara si un jugador y otro
-																						// tienen el mismo nombre
+				
+			}
+			//Si no esta vacio comprobamos si el nombre de nuevo es igual al nombre de la ultima posicion del array
+			//si es igual incluimos los datos de ultimo en nuevo
+			else if (nuevo.getNombre().equals(nba.get(nba.size() - 1).getNombre())) { 
+				
+				//Para hacer mas legible el codigo usaremos una variable para referirnos al ultimo jugador del arraylist
 				Jugador ultimo = nba.get(nba.size() - 1);
-
-				if (!ultimo.getPosiciones().contains(nuevo.getPosiciones().get(0))) { // Comparar las posiciones y si ya
-																						// la contiene que no haga nada
+				
+				//Comparamos las posiciones, si ultimo no contiene la posicion de nuevo,
+				//añadimos todas las posiciones de ultimo a nuevo ademas de la suya
+				if (!ultimo.getPosiciones().contains(nuevo.getPosiciones().get(0))) { 
+																						
 					ArrayList<String> nuevasPos = ultimo.getPosiciones();
 					nuevasPos.add(nuevo.getPosiciones().get(0));
 					nuevo.setPosiciones(nuevasPos);
 				} else {
+					//Si nuevo contiene la posicion de ultimo, nuevo pasa a tener las posiciones de ultimo
 					nuevo.setPosiciones(ultimo.getPosiciones());
 				}
-
+				
+				//Hacemos lo mismo que con las posiciones
 				if (!ultimo.getEquipos().contains(nuevo.getEquipos().get(0))) {
 					ArrayList<String> nuevosEquipos = ultimo.getEquipos();
 					nuevosEquipos.add(nuevo.getEquipos().get(0));
@@ -87,20 +104,31 @@ public class NBA {
 				} else {
 					nuevo.setEquipos(ultimo.getEquipos());
 				}
+				
+				//añadimos los scores anuales a nuevo
+				ArrayList<String> nuevosScores = ultimo.getScoresAnuales();
+				nuevosScores.add(nuevo.getScoresAnuales().get(0));
+				nuevo.setScoresAnuales(nuevosScores);
+				
+				//Hacemos la media y cambiamos ultimo por nuevo
+				nuevo.setMedia();
+				nba.set(nba.size() - 1, nuevo);
+				
+				//Si no tiene el mismo nombre añadimos nuevo al arraylist con su media hecha
 			} else {
 				nuevo.setMedia();
 				nba.add(nuevo);
 			}
-
-			nuevo.setMedia();
-			nba.set(nba.size() - 1, nuevo);
 		}
-
+		
+		//Ordenamos el array
 		quicksort(nba, 0, nba.size() - 1);
-		// System.out.println(nba.toString());
-		for (int i = nba.size() - 1; i > (nba.size() - 1) - 10; i--) {
-			System.out.println(nba.get(i).toString());
+		
+		//Imprimimos los 10 mejores ordenados por media
+		for(int i = 0; i< 10; i++) {
+			System.out.print(nba.get(nba.size()-1-i));
 		}
+		
 		br.close();
 	}
 

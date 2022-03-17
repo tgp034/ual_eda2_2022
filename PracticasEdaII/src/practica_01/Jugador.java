@@ -12,27 +12,32 @@ private String nombre;
     //Cosas para hacer los scores anuales 
     private int puntos;
     private double aciertos;
+    private double scoreAnual;
     private ArrayList<String> scoresAnuales;
     
     //Media de los scores anuales
     private double mediaTotal;
 
-    //Constructor usando los datos que leeremos del archivo
+    //Contrsuctor usando los datos que leeremos del archivo
     public Jugador(String nombre, String posicion, String equipo, double acierto,  int puntos){
         this.nombre = nombre;
+        
         this.equipos = new ArrayList<String>();
         this.equipos.add(equipo);
+        
         this.posiciones = new ArrayList<String>();
         this.posiciones.add(posicion);
+        
         this.aciertos = acierto;
         this.puntos = puntos;
+        this.scoreAnual = acierto*puntos/100;
+        
         this.scoresAnuales = new ArrayList<String>();
-        this.scoresAnuales.add(String.valueOf(puntos*acierto/100.0));
+        scoresAnuales.add(String.valueOf(scoreAnual));
+        
     }
-    public Jugador() {
-    	
-    }
-
+    
+    //Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -69,15 +74,15 @@ private String nombre;
         return mediaTotal;
     }
 
-    public void setMedia() {
-        int suma = 0;
-        for(int i = 0; i < this.scoresAnuales.size(); i++) {
-            suma += Double.valueOf(this.scoresAnuales.get(i));
-        }
-        this.mediaTotal = suma / this.scoresAnuales.size();
-    }
-    
-    public double getAciertos() {
+    public ArrayList<String> getScoresAnuales() {
+		return scoresAnuales;
+	}
+
+	public void setScoresAnuales(ArrayList<String> scoresAnuales) {
+		this.scoresAnuales = scoresAnuales;
+	}
+
+	public double getAciertos() {
         return aciertos;
     }
 
@@ -85,9 +90,18 @@ private String nombre;
         this.aciertos = aciertos;
     }
     
+    //metodo para hallar la media del jugador
+    public void setMedia() {
+        double suma = 0;
+        for(int i = 0; i < this.scoresAnuales.size(); i++) {
+            suma += Double.parseDouble(scoresAnuales.get(i)); 
+        }
+        this.mediaTotal = (suma / this.scoresAnuales.size());
+    }
+    
     @Override
     public String toString() {
-        return this.nombre + " \n" + this.posiciones.toString()+" \t"+ this.equipos.toString()+" \n" + this.mediaTotal+"\n\n";
+        return this.nombre + ": \n Posiciones: " + this.posiciones.toString() 
+        +"\t Equipos: "+ this.equipos.toString()+"\n Media:"+ this.mediaTotal + "\n\n";
     }
 }
-
